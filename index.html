@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111214">
+  <title>Recrutamento da Staff</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #111214;
+      --card: #1a1b1e;
+      --field: #232428;
+      --text: #f2f3f5;
+      --muted: #a5a7ad;
+      --accent: #5865f2;
+      --accent-hover: #4752c4;
+      --border: #34363c;
+      --success: #3ba55d;
+      --danger: #ed4245;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 38px 16px;
+      background:
+        radial-gradient(ellipse at 50% 0, rgba(88, 101, 242, .2), transparent 55%),
+        var(--bg);
+      color: var(--text);
+      font: 16px/1.5 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    button, input, select, textarea { font: inherit; }
+    .container { width: min(100%, 760px); margin: 0 auto; }
+
+    header { margin-bottom: 26px; text-align: center; }
+    .badge {
+      display: inline-block;
+      margin-bottom: 12px;
+      padding: 5px 12px;
+      border: 1px solid rgba(88, 101, 242, .5);
+      border-radius: 999px;
+      background: rgba(88, 101, 242, .14);
+      color: #c4caff;
+      font-size: .8rem;
+      font-weight: 750;
+      letter-spacing: .06em;
+    }
+
+    h1 { margin: 0 0 8px; font-size: clamp(2rem, 6vw, 2.8rem); line-height: 1.15; }
+    header p { max-width: 560px; margin: 0 auto; color: var(--muted); }
+
+    .toolbar { display: flex; justify-content: flex-end; margin-bottom: 12px; }
+    .card {
+      padding: clamp(20px, 5vw, 36px);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: var(--card);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, .28);
+    }
+
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .field { margin-bottom: 18px; }
+    .full { grid-column: 1 / -1; }
+
+    label, legend { display: block; margin-bottom: 7px; font-weight: 650; }
+    .hint { margin: -2px 0 8px; color: var(--muted); font-size: .84rem; }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 12px 13px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      outline: none;
+      background: var(--field);
+      color: var(--text);
+    }
+
+    textarea { min-height: 115px; resize: vertical; }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(88, 101, 242, .2);
+    }
+
+    fieldset { margin: 0 0 20px; padding: 0; border: 0; }
+    .check { display: flex; align-items: flex-start; gap: 10px; color: var(--muted); }
+    .check input { width: 18px; height: 18px; margin: 3px 0 0; accent-color: var(--accent); }
+    .check label { margin: 0; font-weight: 400; }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 42px;
+      padding: 10px 15px;
+      border: 0;
+      border-radius: 9px;
+      background: var(--accent);
+      color: white;
+      cursor: pointer;
+      font-weight: 700;
+      text-decoration: none;
+      transition: background .2s, transform .2s;
+    }
+
+    .button:hover { background: var(--accent-hover); transform: translateY(-1px); }
+    .button:focus-visible { outline: 3px solid #c4caff; outline-offset: 3px; }
+    .button.secondary { border: 1px solid var(--border); background: var(--field); }
+    .button.secondary:hover { background: #303137; }
+    .button.danger { background: var(--danger); }
+    .button.small { min-height: 34px; padding: 6px 10px; font-size: .88rem; }
+    .submit { width: 100%; }
+
+    .notice {
+      display: none;
+      margin-top: 16px;
+      padding: 13px;
+      border: 1px solid var(--success);
+      border-radius: 9px;
+      background: rgba(59, 165, 93, .12);
+      color: #b8f3c9;
+    }
+    .notice.error { border-color: var(--danger); background: rgba(237, 66, 69, .1); color: #ffc2c4; }
+
+    #panel { display: none; margin-top: 18px; }
+    .panel-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+    .panel-head h2 { margin: 0; font-size: 1.2rem; }
+    .panel-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+
+    .application {
+      margin-top: 12px;
+      padding: 16px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--field);
+    }
+    .application h3 { margin: 0 0 8px; font-size: 1rem; }
+    .application p { margin: 5px 0; color: var(--muted); overflow-wrap: anywhere; }
+    .application strong { color: var(--text); }
+    .empty { color: var(--muted); text-align: center; padding: 22px 0; }
+    footer { margin-top: 18px; color: var(--muted); text-align: center; font-size: .83rem; }
+
+    @media (max-width: 560px) {
+      body { padding: 26px 13px; }
+      .grid { grid-template-columns: 1fr; gap: 0; }
+      .full { grid-column: auto; }
+      .panel-head { align-items: flex-start; flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <header>
+      <span class="badge">RECRUTAMENTO ABERTO</span>
+      <h1>Faça parte da equipe</h1>
+      <p>Quer ajudar a comunidade e tornar o servidor um lugar melhor? Preencha sua inscrição com atenção.</p>
+    </header>
+
+    <div class="toolbar">
+      <button class="button secondary small" id="toggle-panel" type="button" aria-expanded="false">
+        Ver inscrições
+      </button>
+    </div>
+
+    <form class="card" id="form-inscricao">
+      <div class="grid">
+        <div class="field">
+          <label for="nome">Nome ou apelido</label>
+          <input id="nome" name="nome" type="text" autocomplete="name" maxlength="60" required placeholder="Como podemos te chamar?">
+        </div>
+
+        <div class="field">
+          <label for="discord">Usuário do Discord</label>
+          <input id="discord" name="discord" type="text" maxlength="50" required placeholder="Seu nome de usuário">
+        </div>
+
+        <div class="field">
+          <label for="idade">Idade</label>
+          <input id="idade" name="idade" type="number" min="13" max="99" required placeholder="Sua idade">
+        </div>
+
+        <div class="field">
+          <label for="cargo">Cargo desejado</label>
+          <select id="cargo" name="cargo" required>
+            <option value="">Selecione uma opção</option>
+            <option value="Moderador(a)">Moderador(a)</option>
+            <option value="Suporte">Suporte</option>
+            <option value="Eventos">Eventos</option>
+            <option value="Outro">Outro</option>
+          </select>
+        </div>
+
+        <div class="field full">
+          <label for="disponibilidade">Disponibilidade</label>
+          <input id="disponibilidade" name="disponibilidade" type="text" maxlength="120" required placeholder="Ex.: noites durante a semana e tardes no fim de semana">
+        </div>
+
+        <div class="field full">
+          <label for="experiencia">Experiência como staff</label>
+          <p class="hint">Conte um pouco sobre sua experiência. Se não tiver, pode dizer também.</p>
+          <textarea id="experiencia" name="experiencia" maxlength="1000" required placeholder="Escreva sua resposta..."></textarea>
+        </div>
+
+        <div class="field full">
+          <label for="motivacao">Por que quer entrar para a equipe?</label>
+          <textarea id="motivacao" name="motivacao" maxlength="1000" required placeholder="Conte por que gostaria de ajudar a comunidade..."></textarea>
+        </div>
+      </div>
+
+      <fieldset>
+        <div class="check">
+          <input id="regras" name="regras" type="checkbox" required>
+          <label for="regras">Confirmo que li as regras do servidor e que as informações acima são verdadeiras.</label>
+        </div>
+      </fieldset>
+
+      <button class="button submit" type="submit">Enviar inscrição</button>
+      <div class="notice" id="mensagem" role="status" aria-live="polite"></div>
+    </form>
+
+    <section class="card" id="panel" aria-label="Inscrições salvas neste navegador">
+      <div class="panel-head">
+        <h2>Inscrições deste navegador</h2>
+        <div class="panel-actions">
+          <button class="button secondary small" id="exportar" type="button">Exportar CSV</button>
+          <button class="button danger small" id="apagar" type="button">Apagar todas</button>
+        </div>
+      </div>
+      <div id="lista"></div>
+    </section>
+
+    <footer>
+      Para testes: as inscrições ficam salvas somente neste navegador e neste dispositivo.
+      Não feche ou limpe os dados do navegador se quiser mantê-las.
+    </footer>
+  </main>
+
+  <script>
+    const STORAGE_KEY = "inscricoes-staff-discord-v1";
+    const form = document.querySelector("#form-inscricao");
+    const mensagem = document.querySelector("#mensagem");
+    const panel = document.querySelector("#panel");
+    const lista = document.querySelector("#lista");
+    const togglePanel = document.querySelector("#toggle-panel");
+
+    function obterInscricoes() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+      } catch {
+        return [];
+      }
+    }
+
+    function mostrarInscricoes() {
+      const inscricoes = obterInscricoes();
+      lista.replaceChildren();
+
+      if (inscricoes.length === 0) {
+        const vazio = document.createElement("p");
+        vazio.className = "empty";
+        vazio.textContent = "Ainda não há inscrições salvas. Preencha o formulário para testar.";
+        lista.append(vazio);
+        return;
+      }
+
+      inscricoes.slice().reverse().forEach((inscricao) => {
+        const card = document.createElement("article");
+        card.className = "application";
+
+        const titulo = document.createElement("h3");
+        titulo.textContent = inscricao.nome + " — " + inscricao.cargo;
+        card.append(titulo);
+
+        const campos = [
+          ["Discord", inscricao.discord],
+          ["Idade", inscricao.idade],
+          ["Disponibilidade", inscricao.disponibilidade],
+          ["Experiência", inscricao.experiencia],
+          ["Motivação", inscricao.motivacao],
+          ["Enviada em", inscricao.data]
+        ];
+
+        campos.forEach(([rotulo, valor]) => {
+          const p = document.createElement("p");
+          const strong = document.createElement("strong");
+          strong.textContent = rotulo + ": ";
+          p.append(strong, document.createTextNode(valor));
+          card.append(p);
+        });
+
+        lista.append(card);
+      });
+    }
+
+    togglePanel.addEventListener("click", () => {
+      const aberto = panel.style.display === "block";
+      panel.style.display = aberto ? "none" : "block";
+      togglePanel.setAttribute("aria-expanded", String(!aberto));
+      togglePanel.textContent = aberto ? "Ver inscrições" : "Esconder inscrições";
+      if (!aberto) mostrarInscricoes();
+    });
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      mensagem.className = "notice";
+      mensagem.style.display = "none";
+
+      if (!form.reportValidity()) return;
+
+      const dados = Object.fromEntries(new FormData(form).entries());
+      const inscricoes = obterInscricoes();
+
+      inscricoes.push({
+        nome: dados.nome.trim(),
+        discord: dados.discord.trim(),
+        idade: dados.idade,
+        cargo: dados.cargo,
+        disponibilidade: dados.disponibilidade.trim(),
+        experiencia: dados.experiencia.trim(),
+        motivacao: dados.motivacao.trim(),
+        data: new Date().toLocaleString("pt-BR")
+      });
+
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(inscricoes));
+      } catch {
+        mensagem.className = "notice error";
+        mensagem.textContent = "Não foi possível salvar neste navegador. Verifique o espaço disponível ou as configurações de privacidade.";
+        mensagem.style.display = "block";
+        return;
+      }
+
+      mensagem.textContent = "Inscrição salva neste navegador! Use “Ver inscrições” para conferir.";
+      mensagem.style.display = "block";
+      form.reset();
+
+      if (panel.style.display === "block") mostrarInscricoes();
+      mensagem.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    });
+
+    document.querySelector("#exportar").addEventListener("click", () => {
+      const inscricoes = obterInscricoes();
+      if (inscricoes.length === 0) {
+        alert("Não há inscrições para exportar.");
+        return;
+      }
+
+      const colunas = ["nome", "discord", "idade", "cargo", "disponibilidade", "experiencia", "motivacao", "data"];
+      const escapar = (valor) => '"' + String(valor ?? "").replaceAll('"', '""') + '"';
+      const csv = [
+        colunas.map(escapar).join(";"),
+        ...inscricoes.map(item => colunas.map(coluna => escapar(item[coluna])).join(";"))
+      ].join("\r\n");
+
+      const arquivo = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(arquivo);
+      link.download = "inscricoes-staff.csv";
+      link.click();
+      URL.revokeObjectURL(link.href);
+    });
+
+    document.querySelector("#apagar").addEventListener("click", () => {
+      if (!confirm("Tem certeza de que deseja apagar todas as inscrições salvas neste navegador?")) return;
+      localStorage.removeItem(STORAGE_KEY);
+      mostrarInscricoes();
+      mensagem.style.display = "none";
+    });
+  </script>
+</body>
+</html>
